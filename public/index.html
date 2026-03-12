@@ -8,30 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #08080D;
-    --surface: rgba(255,255,255,0.03);
-    --border: rgba(255,255,255,0.07);
-    --text: #E8E6FF;
-    --muted: rgba(255,255,255,0.35);
-    --dim: rgba(255,255,255,0.15);
-    --orange: #FF6B35;
-    --purple: #9B7EFF;
-    --teal: #00D4AA;
+    --bg: #08080D; --surface: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.07);
+    --text: #E8E6FF; --muted: rgba(255,255,255,0.35); --dim: rgba(255,255,255,0.15);
+    --orange: #FF6B35; --purple: #9B7EFF; --teal: #00D4AA;
   }
-
   html, body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; }
-
   body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
     background-size: 48px 48px;
   }
-
   #app { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
 
   header { padding: 48px 0 32px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; border-bottom: 1px solid var(--border); }
@@ -41,17 +28,15 @@
   .badge-label { font-size: 10px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
   h1 { font-family: 'Syne', sans-serif; font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; color: #fff; }
   h1 span { color: rgba(255,255,255,0.25); }
-  .last-fetched { font-size: 11px; color: var(--dim); letter-spacing: .04em; margin-top: 8px; }
+  .meta-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .last-fetched { font-size: 11px; color: var(--dim); letter-spacing: .04em; }
+  .cached-badge { font-size: 10px; color: var(--teal); background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.2); border-radius: 20px; padding: 2px 9px; letter-spacing: .05em; }
 
   #fetch-btn {
-    background: var(--orange); color: #fff;
-    border: none; border-radius: 10px;
-    padding: 13px 26px;
-    font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 9px;
-    transition: transform .2s, box-shadow .2s, opacity .2s;
-    white-space: nowrap; letter-spacing: .02em;
+    background: var(--orange); color: #fff; border: none; border-radius: 10px;
+    padding: 13px 26px; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500;
+    cursor: pointer; display: flex; align-items: center; gap: 9px;
+    transition: transform .2s, box-shadow .2s, opacity .2s; white-space: nowrap; letter-spacing: .02em;
   }
   #fetch-btn:hover:not(:disabled) { transform: scale(1.02); box-shadow: 0 0 28px rgba(255,107,53,.35); }
   #fetch-btn:active:not(:disabled) { transform: scale(.98); }
@@ -62,14 +47,13 @@
   .sources-strip { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .strip-label { font-size: 10px; color: rgba(255,255,255,0.2); letter-spacing: .12em; text-transform: uppercase; margin-right: 4px; }
   .source-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: var(--muted); }
+  .source-pill.hot { border-color: rgba(255,107,53,.35); color: var(--orange); }
 
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 22px 0 0; }
   .tab {
     background: transparent; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
-    padding: 8px 16px; color: var(--muted);
-    font-family: 'DM Mono', monospace; font-size: 12px;
-    cursor: pointer; transition: all .15s;
-    display: flex; align-items: center; gap: 8px; letter-spacing: .02em;
+    padding: 8px 16px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px;
+    cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 8px; letter-spacing: .02em;
   }
   .tab:hover { background: rgba(255,255,255,0.05); }
   .tab.active[data-cat="design"]             { border-color: var(--orange); color: var(--orange); background: rgba(255,107,53,.1); }
@@ -77,8 +61,8 @@
   .tab.active[data-cat="product-management"] { border-color: var(--teal);   color: var(--teal);   background: rgba(0,212,170,.1); }
   .tab-count { border-radius: 10px; padding: 1px 6px; font-size: 10px; font-weight: 500; color: #000; display: none; }
   .tab.has-count .tab-count { display: inline; }
-  .tab[data-cat="design"] .tab-count            { background: var(--orange); }
-  .tab[data-cat="product-design"] .tab-count    { background: var(--purple); }
+  .tab[data-cat="design"] .tab-count             { background: var(--orange); }
+  .tab[data-cat="product-design"] .tab-count     { background: var(--purple); }
   .tab[data-cat="product-management"] .tab-count { background: var(--teal); }
 
   #content { padding: 22px 0 0; }
@@ -95,26 +79,28 @@
   .skel-scanning { font-size: 11px; color: var(--dim); margin-bottom: 18px; letter-spacing: .05em; }
 
   .card {
-    display: block; text-decoration: none;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-    padding: 18px 20px; margin-bottom: 10px;
-    transition: opacity .15s, border-color .15s;
-    animation: fadeUp .35s ease forwards; opacity: 0;
+    display: block; text-decoration: none; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px; margin-bottom: 10px;
+    transition: opacity .15s, border-color .15s; animation: fadeUp .35s ease forwards; opacity: 0;
   }
   .card:hover { opacity: .75; border-color: rgba(255,255,255,0.14); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
   .card:nth-child(1){animation-delay:.04s} .card:nth-child(2){animation-delay:.09s}
   .card:nth-child(3){animation-delay:.14s} .card:nth-child(4){animation-delay:.19s}
   .card:nth-child(5){animation-delay:.24s} .card:nth-child(6){animation-delay:.29s}
-  .card:nth-child(7){animation-delay:.34s}
+  .card:nth-child(7){animation-delay:.34s} .card:nth-child(8){animation-delay:.39s}
 
   .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
   .card-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; flex: 1; }
   .card-ext { flex-shrink: 0; margin-top: 2px; opacity: .25; }
   .card-snippet { font-size: 12px; color: rgba(255,255,255,.42); line-height: 1.6; margin-bottom: 12px; }
-  .card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .source-tag { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 9px; border-radius: 6px; letter-spacing: .02em; }
-  .card-age { font-size: 11px; color: var(--dim); letter-spacing: .03em; }
+  .pub-date {
+    font-size: 10px; letter-spacing: .04em; padding: 2px 8px; border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3);
+  }
+  .pub-date.fresh { border-color: rgba(0,212,170,.25); color: var(--teal); background: rgba(0,212,170,.06); }
 
   .source-tag.design             { color: var(--orange); background: rgba(255,107,53,.12); }
   .source-tag.product-design     { color: var(--purple); background: rgba(155,126,255,.12); }
@@ -130,7 +116,10 @@
         <span class="badge-label">Live Signal</span>
       </div>
       <h1>AI × Design &amp; Product<br><span>Signal Feed</span></h1>
-      <div class="last-fetched" id="last-fetched" style="display:none"></div>
+      <div class="meta-row">
+        <div class="last-fetched" id="last-fetched" style="display:none"></div>
+        <div class="cached-badge" id="cached-badge" style="display:none">Cached · results preserved</div>
+      </div>
     </div>
     <button id="fetch-btn" onclick="fetchFeed()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -139,13 +128,14 @@
   </header>
 
   <div class="sources-strip">
-    <span class="strip-label">Sources</span>
-    <span class="source-pill">Reddit</span>
+    <span class="strip-label">Prioritised</span>
+    <span class="source-pill hot">Reddit</span>
+    <span class="source-pill hot">X / Twitter</span>
+    <span class="strip-label" style="margin-left:4px">Also</span>
     <span class="source-pill">YouTube</span>
-    <span class="source-pill">X / Twitter</span>
     <span class="source-pill">LinkedIn</span>
     <span class="source-pill">GitHub</span>
-    <span class="source-pill">Articles &amp; Papers</span>
+    <span class="source-pill">Articles</span>
   </div>
 
   <div class="tabs">
@@ -164,12 +154,13 @@
     <div class="empty-state">
       <div class="empty-icon">⚡</div>
       <div class="empty-title">No signal yet</div>
-      <div class="empty-sub">Hit "Load Feed" to pull the latest<br>AI × Design &amp; Product content from across the web.</div>
+      <div class="empty-sub">Hit "Load Feed" to pull the latest<br>AI × Design &amp; Product content from X, Reddit &amp; beyond.</div>
     </div>
   </div>
 </div>
 
 <script>
+const CACHE_KEY = 'signal_feed_cache';
 let activeTab = 'design';
 let feedData = {};
 
@@ -182,6 +173,23 @@ const SOURCE_SVG = {
   article:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
 };
 
+// ── Session cache ──────────────────────────────────────────────
+function saveToCache(data, fetchedAt) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, fetchedAt })); } catch(e) {}
+}
+
+function loadFromCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+
+function clearCache() {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
+}
+
+// ── UI helpers ─────────────────────────────────────────────────
 function switchTab(cat) {
   activeTab = cat;
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
@@ -193,12 +201,12 @@ function setLoading(on) {
   btn.disabled = on;
   btn.innerHTML = on
     ? `<svg class="spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Scanning sources…`
-    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> ${Object.keys(feedData).length ? 'Refresh Feed' : 'Load Feed'}`;
+    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh Feed`;
 }
 
 function showSkeletons() {
   document.getElementById('content').innerHTML = `
-    <div class="skel-scanning">Searching Reddit, YouTube, X, LinkedIn, GitHub &amp; publications…</div>
+    <div class="skel-scanning">Prioritising X &amp; Reddit · scanning last 30 days…</div>
     ${[...Array(5)].map(() => `
       <div class="skeleton">
         <div class="skel-line" style="width:58%;margin-bottom:11px"></div>
@@ -212,19 +220,31 @@ function showError(msg) {
 }
 
 function escHtml(s = '') {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setMetaRow(fetchedAt, fromCache) {
+  const lf = document.getElementById('last-fetched');
+  const cb = document.getElementById('cached-badge');
+  lf.textContent = 'Fetched ' + new Date(fetchedAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  lf.style.display = 'block';
+  cb.style.display = fromCache ? 'inline' : 'none';
 }
 
 function renderCards() {
   const items = feedData[activeTab] || [];
   const content = document.getElementById('content');
   if (!items.length) {
-    content.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div><div class="empty-title">No signal yet</div><div class="empty-sub">Hit "Load Feed" to pull the latest<br>AI × Design &amp; Product content.</div></div>`;
+    content.innerHTML = `<div class="empty-state"><div class="empty-icon">⚡</div><div class="empty-title">No signal yet</div><div class="empty-sub">Hit "Load Feed" to pull the latest<br>AI × Design &amp; Product content from X, Reddit &amp; beyond.</div></div>`;
     return;
   }
   content.innerHTML = items.map(item => {
     const icon = SOURCE_SVG[item.source] || SOURCE_SVG.article;
-    const age = item.daysAgo != null ? `<span class="card-age">${item.daysAgo === 0 ? 'today' : item.daysAgo + 'd ago'}</span>` : '';
+    const pub = item.publishedDate;
+    const isFresh = pub && pub.daysAgo <= 7;
+    const dateTag = pub
+      ? `<span class="pub-date ${isFresh ? 'fresh' : ''}" title="${pub.iso || ''}">${escHtml(pub.label)}</span>`
+      : '';
     return `
       <a class="card" href="${escHtml(item.url)}" target="_blank" rel="noopener noreferrer">
         <div class="card-header">
@@ -234,22 +254,31 @@ function renderCards() {
         <div class="card-snippet">${escHtml(item.snippet)}</div>
         <div class="card-meta">
           <span class="source-tag ${activeTab}">${icon} ${escHtml(item.sourceName)}</span>
-          ${age}
+          ${dateTag}
         </div>
       </a>`;
   }).join('');
 }
 
-function updateCounts() {
+function applyData(clusters, fetchedAt, fromCache) {
+  feedData = clusters;
   ['design','product-design','product-management'].forEach(cat => {
     const n = (feedData[cat] || []).length;
     const el = document.getElementById('count-' + cat);
     const tab = document.querySelector(`.tab[data-cat="${cat}"]`);
     if (n) { el.textContent = n; tab.classList.add('has-count'); }
   });
+  renderCards();
+  setMetaRow(fetchedAt, fromCache);
+  setLoading(false);
+  // Update button label now that we have data
+  document.getElementById('fetch-btn').querySelector('svg + span') ;
+  document.getElementById('fetch-btn').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh Feed`;
+  document.getElementById('fetch-btn').disabled = false;
 }
 
 async function fetchFeed() {
+  clearCache();
   setLoading(true);
   showSkeletons();
   feedData = {};
@@ -258,18 +287,22 @@ async function fetchFeed() {
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
-    feedData = data.clusters || {};
-    updateCounts();
-    renderCards();
-    const lf = document.getElementById('last-fetched');
-    lf.textContent = 'Last fetched ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    lf.style.display = 'block';
+    const fetchedAt = data.generatedAt || new Date().toISOString();
+    saveToCache(data.clusters, fetchedAt);
+    applyData(data.clusters, fetchedAt, false);
   } catch(err) {
-    showError(`Something went wrong: ${err.message}`);
-  } finally {
+    showError(`Something went wrong: ${err.message}<br><br>Check that your TAVILY_API_KEY is set in Vercel environment variables.`);
     setLoading(false);
   }
 }
+
+// ── On load: restore from session cache if available ───────────
+(function init() {
+  const cached = loadFromCache();
+  if (cached && cached.data) {
+    applyData(cached.data, cached.fetchedAt, true);
+  }
+})();
 </script>
 </body>
 </html>
